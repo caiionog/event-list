@@ -11,7 +11,7 @@ def register(request):
             user.set_password(form.cleaned_data['password'])
             user.save()
             login(request, user)
-            return redirect('/home')  # Mude para a sua página inicial
+            return redirect('feed:index')  # Mude para a sua página inicial
     else:
         form = RegistrationForm()
     return render(request, 'accounts/register.html', {'form': form})
@@ -27,7 +27,7 @@ def user_login(request):
             user = authenticate(request, username=nickname, password=password)
             if user:
                 login(request, user)
-                return redirect('/home')  # Redirecione para a página inicial
+                return redirect('feed:index')  # Redirecione para a página inicial
             else:
                 form.add_error(None, "Credenciais inválidas. Verifique seu nickname e senha.")
     else:

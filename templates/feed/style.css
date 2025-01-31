@@ -1,0 +1,5 @@
+#chat-messages {
+    display: flex;
+    flex-direction: column-reverse; /* Inverte a ordem das mensagens */
+    overflow-y: auto;
+}
