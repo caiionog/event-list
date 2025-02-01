@@ -25,7 +25,7 @@ def index(request):
 
     return render(request, 'feed/index.html', {
         'events': events,
-        'messages': messages,
+        'chat_messages': messages,
         'form': form,
         'liked_event_ids': liked_event_ids,
     })

@@ -25,6 +25,7 @@ class CustomUserManager(BaseUserManager):
 class CustomUser(AbstractBaseUser):
     nickname = models.CharField(max_length=50, unique=True)
     email = models.EmailField(unique=True)
+    is_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)  # Necessário para acesso ao painel admin
     is_admin = models.BooleanField(default=False)
