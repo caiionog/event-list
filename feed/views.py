@@ -6,14 +6,18 @@ from chat.models import Message
 from interactions.models import Like
 from chat.forms import MessageForm
 
-@login_required
 def index(request):
     # Lógica da view
     events = Event.get_ranked_events()
     messages = Message.objects.all().order_by('created_at')[:50]
-    liked_event_ids = Like.objects.filter(user=request.user).values_list('event_id', flat=True)
     
-    if request.method == 'POST':
+    # Verifica se o usuário está logado para carregar os eventos curtidos
+    liked_event_ids = []
+    if request.user.is_authenticated:
+        liked_event_ids = Like.objects.filter(user=request.user).values_list('event_id', flat=True)
+    
+    # Verifica se o usuário está logado antes de processar o formulário de mensagem
+    if request.method == 'POST' and request.user.is_authenticated:
         form = MessageForm(request.POST)
         if form.is_valid():
             message = form.save(commit=False)
@@ -28,6 +32,7 @@ def index(request):
         'chat_messages': messages,
         'form': form,
         'liked_event_ids': liked_event_ids,
+        'user_is_authenticated': request.user.is_authenticated,  # Passa o estado de autenticação para o template
     })
 
 @login_required
