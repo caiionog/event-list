@@ -5,6 +5,7 @@ from events.models import Event
 from chat.models import Message
 from interactions.models import Like
 from chat.forms import MessageForm
+from django.http import Http404
 
 def index(request):
     # Lógica da view
@@ -61,3 +62,6 @@ def report_message(request, message_id):
         messages.error(request, "Você não pode denunciar sua própria mensagem.")
     
     return redirect('feed:index')  # Redireciona de volta ao chat
+
+def custom_page_not_found_view(request, exception):
+    return render(request, '404.html', status=404)

@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -12,81 +14,81 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
+            background-color: black; /* Fundo escuro */
         }
+
         .form-container {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            max-width: 400px;
+            background-color: rgb(49, 49, 49); /* Fundo cinza escuro */
+            padding: 40px 35px; /* Mais padding para deixar a área mais espaçosa */
+            border-radius: 15px; /* Bordas mais arredondadas */
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4); /* Sombra mais suave e mais forte */
+            max-width: 420px;
             width: 100%;
-            position: relative; /* Adicione isso */
         }
+
         .form-container h1 {
-            margin-bottom: 20px;
-            font-size: 24px;
+            margin-bottom: 30px; /* Aumentei o espaçamento inferior */
+            font-size: 30px;
             text-align: center;
+            color: #ff4d4d; /* Título em vermelho */
+            font-weight: 700; /* Título mais impactante */
         }
+
         .form-container input {
             width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            padding: 14px;
+            margin-bottom: 20px; /* Maior espaçamento entre os campos */
+            border-radius: 10px;
+            background-color: rgb(64, 64, 64); /* Cinza para os inputs */
+            border: none;
+            color: white;
+            font-size: 16px; /* Tamanho de fonte maior */
         }
+
+        .form-container input::placeholder {
+            color: white; /* Cor do placeholder */
+        }
+
+        .form-container input:focus {
+            outline: none;
+            border: 2px solid #ff4d4d; /* Adiciona borda vermelha ao focar no campo */
+        }
+
         .form-container button {
             width: 100%;
-            padding: 10px;
-            background-color: #007bff;
+            padding: 14px;
+            background-color: #ff4d4d; /* Fundo vermelho para o botão */
             color: white;
             border: none;
-            border-radius: 5px;
-            font-size: 16px;
+            border-radius: 10px;
+            font-size: 18px; /* Maior tamanho de fonte */
+            cursor: pointer;
+            font-weight: 600; /* Texto mais destacado */
+            margin-top: 25px; /* Aumentei o espaçamento superior */
         }
+
         .form-container button:hover {
-            background-color: #0056b3;
+            background-color: #e60000; /* Fundo vermelho mais escuro no hover */
         }
+
         .form-container p {
             text-align: center;
+            color: white;
+            margin-top: 30px; /* Mais espaçamento acima */
         }
-        .alert {
-            padding: 10px;
-            margin-bottom: 15px; /* Espaçamento entre as mensagens */
-            border-radius: 4px;
-            text-align: center; /* Centraliza o texto */
+
+        .form-container a {
+            color: #ff4d4d; /* Cor vermelha para o link */
+            font-weight: 500; /* Tornando o link mais destacado */
         }
-        .alert-success {
-            background-color: #d4edda;
-            color: #155724;
-        }
-        .alert-info {
-            background-color: #d1ecf1;
-            color: #0c5460;
-        }
-        .alert-warning {
-            background-color: #fff3cd;
-            color: #856404;
-        }
-        .alert-error {
-            background-color: #f8d7da;
-            color: #721c24;
+
+        .form-container a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
     <div class="form-container">
-        <!-- Mensagens movidas para dentro do .form-container -->
-        {% if messages %}
-        <div id="messages">
-            {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">
-                {{ message }}
-            </div>
-            {% endfor %}
-        </div>
-        {% endif %}
-
         <h1>Login</h1>
         <form method="POST">
             {% csrf_token %}
@@ -95,14 +97,5 @@
         </form>
         <p>Não tem uma conta? <a href="/accounts/register/">Registrar</a></p>
     </div>
-
-    <script>
-        setTimeout(function() {
-            var messages = document.getElementById('messages');
-            if (messages) {
-                messages.style.display = 'none';
-            }
-        }, 5000); // 5000 milissegundos = 5 segundos
-    </script>
 </body>
 </html>

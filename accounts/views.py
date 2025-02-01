@@ -12,6 +12,7 @@ from django.utils.encoding import force_bytes, force_str
 def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
+        form.request = request
         if form.is_valid():
             user = form.save(commit=False)
             user.is_active = False  # O usuário não estará ativo até confirmar o e-mail
@@ -38,6 +39,7 @@ def register(request):
             return redirect('login')  # Redirecione para a página de login
     else:
         form = RegistrationForm()
+        form.request = request
     return render(request, 'accounts/register.html', {'form': form})
 
 def user_login(request):
