@@ -3,3 +3,13 @@
     flex-direction: column-reverse; /* Inverte a ordem das mensagens */
     overflow-y: auto;
 }
+
+#messages {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    width: 80%;
+    max-width: 400px;
+}
