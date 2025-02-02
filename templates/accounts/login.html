@@ -114,37 +114,6 @@
         .form-container {
             animation: fadeIn 1s ease-in-out;
         }
-        .error-message {
-            color: #ff4d4d; /* Cor vermelha para mensagens de erro */
-            font-size: 14px;
-            margin-bottom: 10px;
-        }
-
-        .alert {
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 4px;
-            text-align: center;
-            position: fixed;
-            top: 80px; /* Abaixo do cabeçalho */
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
-            width: 80%;
-            max-width: 400px;
-        }
-
-        .alert-error {
-            background-color: #ffebee; /* Fundo vermelho claro */
-            color: #c62828; /* Texto vermelho escuro */
-            border: 1px solid #c62828; /* Borda vermelha */
-        }
-
-        .alert-success {
-            background-color: #d4edda; /* Fundo verde claro */
-            color: #155724; /* Texto verde escuro */
-            border: 1px solid #155724; /* Borda verde */
-        }
 
         @keyframes fadeIn {
             from {
@@ -166,12 +135,12 @@
             <img src="/path/to/your/logo.png" alt="Logo">
         </div>
     </header>
-
+    
     <!-- Exibir mensagens do Django -->
     {% if messages %}
     <div id="messages">
         {% for message in messages %}
-        <div class="alert alert-{% if message.tags == 'error' %}error{% else %}success{% endif %}">
+        <div class="alert alert-{{ message.tags }}">
             {{ message }}
         </div>
         {% endfor %}
@@ -195,6 +164,8 @@
                         <input type="password" id="password" name="password" placeholder="Digite sua senha">
                     </div>
 
+                    <p><a href="{% url 'password_reset' %}" style="color: #ddd; text-decoration: underline;">Esqueceu sua senha?</a></p>
+
                     <button type="submit">Entrar</button>
                 </form>
 
@@ -202,13 +173,6 @@
             </div>
         </main>
     </div>
-    <script>
-        setTimeout(function() {
-            var messages = document.getElementById('messages');
-            if (messages) {
-                messages.style.display = 'none';
-            }
-        }, 5000); // 5000 milissegundos = 5 segundos
-    </script>
+
 </body>
 </html>

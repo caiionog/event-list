@@ -18,6 +18,7 @@ class CustomUserManager(BaseUserManager):
         user = self.create_user(nickname, email, password)
         user.is_admin = True
         user.is_staff = True  # Necessário para o painel admin
+        user.is_premium = True  # Necessário para o painel admin
         user.is_superuser = True  # Necessário para o painel admin
         user.save(using=self._db)
         return user
@@ -27,6 +28,7 @@ class CustomUser(AbstractBaseUser):
     email = models.EmailField(unique=True)
     is_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
+    is_premium = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)  # Necessário para acesso ao painel admin
     is_admin = models.BooleanField(default=False)
 

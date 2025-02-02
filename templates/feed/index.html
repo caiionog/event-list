@@ -10,7 +10,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         body {
-            background-color: #121212;
+            background-color: #000000;
             color: #e0e0e0;
         }
 
@@ -18,13 +18,14 @@
             display: flex;
             justify-content: center;
             margin-top: 20px;
+            position: relative;
         }
 
         .search-bar input {
             background-color: #444;
             border: 1px solid #555;
             border-radius: 25px;
-            padding: 10px 20px 10px 40px; /* Espaço para a lupa */
+            padding: 10px 20px 10px 40px;
             color: #e0e0e0;
             width: 100%;
             max-width: 400px;
@@ -42,26 +43,41 @@
             background: none;
             border: none;
             position: absolute;
-            margin-left: 10px;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
             cursor: pointer;
-            color: #f44336; /* Ícone vermelho */
+            color: #f44336;
         }
 
         .event-card {
-            background-color: #1e1e1e;
-            border-radius: 8px;
             padding: 16px;
+            background-color: transparent;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .event-card:hover {
-            transform: scale(1.05); /* Efeito de zoom */
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0);
         }
 
         .right-sidebar button {
-            color: #f44336; /* Ícones dos botões laterais em vermelho */
+            color: #f44336;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        .right-sidebar button:hover {
+            background-color: #f44336;
+            color: #ffffff;
+            transform: scale(1.1);
+        }
+
+        .highlight {
+            background-color: #f44336;
+            color: #ffffff;
+            transform: scale(1.1);
+            transition: transform 0.3s ease, background-color 0.3s ease;
         }
 
         .alert {
@@ -70,7 +86,7 @@
             border-radius: 4px;
             text-align: center;
             position: fixed;
-            top: 80px; /* Abaixo do cabeçalho */
+            top: 80px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 1000;
@@ -79,27 +95,27 @@
         }
 
         .alert-error {
-            background-color: #ffebee; /* Fundo vermelho claro */
-            color: #c62828; /* Texto vermelho escuro */
-            border: 1px solid #c62828; /* Borda vermelha */
+            background-color: #ffebee;
+            color: #c62828;
+            border: 1px solid #c62828;
         }
 
         .alert-success {
-            background-color: #d4edda; /* Fundo verde claro */
-            color: #155724; /* Texto verde escuro */
-            border: 1px solid #155724; /* Borda verde */
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #155724;
         }
 
         .alert-info {
-            background-color: #e3f2fd; /* Fundo azul claro */
-            color: #0d47a1; /* Texto azul escuro */
-            border: 1px solid #0d47a1; /* Borda azul */
+            background-color: #e3f2fd;
+            color: #0d47a1;
+            border: 1px solid #0d47a1;
             padding: 10px;
             margin-bottom: 15px;
             border-radius: 4px;
             text-align: center;
             position: fixed;
-            top: 80px; /* Abaixo do cabeçalho */
+            top: 80px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 1000;
@@ -107,19 +123,137 @@
             max-width: 400px;
         }
 
+        #chat-messages {
+            display: flex;
+            flex-direction: column-reverse;
+            overflow-y: auto;
+            flex-grow: 1;
+            padding-bottom: 60px;
+        }
+
+        #messages {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            width: 80%;
+            max-width: 400px;
+        }
+
+        .right-sidebar {
+            position: fixed;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+        }
+
+        .message {
+            position: relative;
+        }
+
+        .report-button {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .message:hover .report-button {
+            display: block;
+        }
+
+        .chat-input {
+            background-color: transparent;
+            border: 2px solid #f44336;
+            border-radius: 25px;
+            padding: 10px 20px;
+            color: #e0e0e0;
+            width: 95%;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .chat-input:focus {
+            background-color: transparent;
+            outline: none;
+            border-color: #d32f2f;
+            box-shadow: 0 0 8px rgba(211, 47, 47, 0.5);
+        }
+
+        .chat-send-button {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        .chat-send-button:hover {
+            background-color: #d32f2f;
+            transform: scale(1.05);
+        }
+
+        .chat-container {
+            width: 100%; /* Para garantir que ele ocupa toda a largura */
+            max-width: 520px; /* Igual ao contêiner principal */
+            margin: 0 auto; /* Centralizar */
+            display: flex;
+            align-items: center;
+            position: fixed;
+            gap: 10px;
+            padding: 10px;
+            background-color: transparent;
+            border-top: 1px solid #f44336;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+            left: 0.1px;
+            bottom: 0.1rem;
+        }
+
+
+        .toggle-button {
+            
+            background: none;
+            border: none;
+            color: #f44336;
+            background-color: #000000;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        .toggle-button.open {
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            transform: translate(-50%, -50%);
+        }
+
+        .toggle-button.closed {
+            position: fixed;
+            top: 50%;
+            left: 0;
+            transform: translate(-50%, -50%);
+            display: none;
+        }
     </style>
 </head>
 <body class="bg-dark">
 
-    <!-- Search Bar -->
-    <div class="search-bar">
-        <form action="#" method="get" class="relative">
-            <input type="text" placeholder="Search for businesses..." class="focus:outline-none">
-            <button type="submit" class="absolute left-3 top-1/2 transform -translate-y-1/2">
-                <i class="fas fa-search"></i> <!-- Lupa dentro da barra -->
-            </button>
-        </form>
-    </div>
+    <!-- Barra de Pesquisa -->
+    <div class="search-bar mt-24 w-1/4 mx-auto relative">
+        <input type="text" id="searchInput" placeholder="Search" oninput="filterEvents()" class="w-full px-4 py-2 border border-gray-750 rounded-lg bg-gray-850 text-white">
+        <span class="search-icon absolute right-2 top-1/2 transform -translate-y-1/2">
+            <i class="fas fa-search"></i>
+        </span>
+    </div>>
 
     <!-- Django Messages -->
     {% if messages %}
@@ -139,7 +273,11 @@
                 <h1 class="text-xl font-bold text-light">IFEAST</h1>
                 <div class="flex items-center space-x-4">
                     <a href="{% url 'events:create_event' %}" class="px-4 py-2 border rounded-lg bg-dark text-light">Sign in your business</a>
-                    <a href="{% url 'login' %}" class="px-4 py-2 bg-red-600 text-white rounded-lg">Login</a>
+                    {% if request.user.is_authenticated %}
+                        <a href="{% url 'logout' %}" class="px-4 py-2 text-light">Deseja sair? {{ request.user.nickname }}</a>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="px-4 py-2 bg-red-600 text-white rounded-lg">Login</a>
+                    {% endif %}
                 </div>
             </div>
         </header>
@@ -147,19 +285,28 @@
         <!-- Main Content -->
         <div class="container mx-auto px-4 pt-32 pb-20 flex">
             <!-- Chat Sidebar -->
-            <aside class="w-1/4 fixed left-0 top-32 bottom-0 bg-dark p-4 border-r border-dark">
+            <aside class="w-1/4 fixed left-0 top-32 bottom-0 bg-gray-850 p-4 border-r border-gray-750" id="chat-sidebar">
                 <div class="h-full flex flex-col">
-                    <div class="flex-grow overflow-y-auto flex flex-col-reverse" id="chat-messages">
+                    <!-- Cabeçalho do Chat -->
+                    <div class="flex justify-between items-center p-4 border-b border-gray-750">
+                        <h2 class="text-lg font-bold text-white">Chat</h2>
+                    </div>
+
+                    <!-- Área de Mensagens -->
+                    <div class="flex-grow chat-messages p-4 overflow-y-auto" id="chat-messages">
                         {% for chat_message in chat_messages reversed %}
                             <div class="message mb-4 flex justify-between items-center">
                                 <div>
-                                    <span class="font-bold">{{ chat_message.sender.nickname }}:</span> {{ chat_message.content }}
+                                    <span class="font-bold {% if chat_message.sender.is_premium %}text-yellow-400{% else %}text-white{% endif %}">
+                                        {{ chat_message.sender.nickname }}:
+                                    </span>
+                                    <span class="text-white">{{ chat_message.content }}</span>
                                 </div>
-                                <div class="flex space-x-2">
+                                <div class="flex space-x-2 report-button">
                                     {% if request.user == chat_message.sender or request.user.is_staff %}
-                                    <a href="{% url 'feed:delete_message' chat_message.id %}" class="text-red-500 hover:text-red-700">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
+                                        <a href="{% url 'feed:delete_message' chat_message.id %}" class="text-red-500 hover:text-red-700">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
                                     {% endif %}
                                     {% if request.user != chat_message.sender and not request.user.is_staff %}
                                         <a href="{% url 'feed:report_message' chat_message.id %}" class="text-yellow-500 hover:text-yellow-700">
@@ -169,18 +316,16 @@
                                 </div>
                             </div>
                         {% empty %}
-                            <p>No messages yet.</p>
+                            <p class="text-white">No messages yet.</p>
                         {% endfor %}
                     </div>
 
-                    <!-- Message Form -->
-                    <div class="border-t p-2">
-                        <form method="POST" action="{% url 'feed:index' %}">
+                    <!-- Formulário de Envio de Mensagem -->
+                    <div class="border-t border-gray-750 p-2">
+                        <form method="POST" action="{% url 'feed:index' %}" class="w-full flex">
                             {% csrf_token %}
-                            <div class="flex">
-                                <input type="text" name="content" placeholder="Type your message..." class="w-full px-4 py-2 border rounded-lg bg-dark text-light" required>
-                                <button type="submit" class="ml-2 px-4 py-2 bg-red-600 text-white rounded-lg">Send</button>
-                            </div>
+                            <input type="text" name="content" placeholder="Digite sua mensagem..." class="w-full px-4 py-2 border border-gray-750 rounded-lg bg-gray-850 text-white" required>
+                            <button type="submit" class="ml-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-200">Enviar</button>
                         </form>
                     </div>
                 </div>
@@ -188,7 +333,7 @@
 
             <!-- Main Feed -->
             <main class="w-3/4 ml-auto">
-                <div class="grid grid-cols-2 gap-6">
+                <div class="grid grid-cols-2 gap-6" id="eventList">
                     {% for event in events %}
                         <div class="event-card">
                             <a href="{% url 'events:event_detail' event.id %}">
@@ -207,10 +352,10 @@
                                     <i class="fas fa-heart {% if event.id in liked_event_ids %}text-red-500{% else %}text-gray-500{% endif %}"></i>
                                     <span class="text-light">Likes: {{ event.like_count }}</span>
                                 </a>
-                                <button class="flex items-center space-x-1 text-light">
+                                <a href="{% url 'interactions:save_event' event.id %}" class="flex items-center space-x-1 text-light">
                                     <i class="fas fa-bookmark"></i>
-                                    <span>Saves: {{ event.saves }}</span>
-                                </button>
+                                    <span>Saves: {{ event.saves_count }}</span>
+                                </a>
                             </div>
                         </div>
                     {% empty %}
@@ -220,10 +365,7 @@
             </main>
 
             <!-- Right Sidebar -->
-            <aside class="fixed right-0 top-32 p-4 space-y-4">
-                <button class="w-12 h-12 rounded-full bg-dark shadow-dark flex items-center justify-center">
-                    <i class="fas fa-home"></i>
-                </button>
+            <aside class="right-sidebar">
                 <button class="w-12 h-12 rounded-full bg-dark shadow-dark flex items-center justify-center">
                     <i class="fas fa-filter"></i>
                 </button>
@@ -239,33 +381,48 @@
             </aside>
         </div>
     </div>
+
+    <!-- Botão para abrir o chat -->
+    <button class="toggle-button closed" onclick="toggleChat()">&#x25B6;</button>
+
     <script>
         function filterEvents() {
-            // Obtém o valor da pesquisa
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-    
-            // Obtém todos os cards de eventos
             const eventCards = document.querySelectorAll('.event-card');
     
-            // Itera sobre cada card
             eventCards.forEach(card => {
                 const eventName = card.querySelector('h3').textContent.toLowerCase();
                 const eventDescription = card.querySelector('p').textContent.toLowerCase();
-    
-                // Verifica se o termo de pesquisa está no nome ou na descrição
                 if (eventName.includes(searchTerm) || eventDescription.includes(searchTerm)) {
-                    card.style.display = 'block'; // Mostra o card
+                    card.style.display = 'block';
                 } else {
-                    card.style.display = 'none'; // Oculta o card
+                    card.style.display = 'none';
                 }
             });
         }
-            setTimeout(function() {
-                var messages = document.getElementById('messages');
-                if (messages) {
-                    messages.style.display = 'none';
-                }
-            }, 5000); // 5000 milissegundos = 5 segundos
-        </script>
+
+        function toggleChat() {
+            const chatSidebar = document.getElementById('chat-sidebar');
+            const openButton = document.querySelector('.toggle-button.open');
+            const closedButton = document.querySelector('.toggle-button.closed');
+
+            if (chatSidebar.classList.contains('hidden')) {
+                chatSidebar.classList.remove('hidden');
+                openButton.style.display = 'block';
+                closedButton.style.display = 'none';
+            } else {
+                chatSidebar.classList.add('hidden');
+                openButton.style.display = 'none';
+                closedButton.style.display = 'block';
+            }
+        }
+
+        setTimeout(function() {
+            var messages = document.getElementById('messages');
+            if (messages) {
+                messages.style.display = 'none';
+            }
+        }, 5000); // 5000 milissegundos = 5 segundos
+    </script>
 </body>
 </html>

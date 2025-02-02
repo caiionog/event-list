@@ -14,3 +14,14 @@ class Like(models.Model):
 
     def __str__(self):
         return f'{self.user.nickname} curtiu {self.event.name}'
+    
+class Save(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='saves')
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='saves')
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'event')  # Impede que o mesmo usuário salve o mesmo evento mais de uma vez
+
+    def __str__(self):
+        return f'{self.user.nickname} salvou {self.event.name}'
