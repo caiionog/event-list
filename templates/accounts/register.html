@@ -5,74 +5,106 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrar</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            background-color: #121212; /* Fundo escuro */
+            font-family: 'Arial', sans-serif;
+            margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            margin: 0;
-            background-color: black; /* Fundo escuro */
+        }
+
+        .header {
+            background-color: rgb(40, 40, 40);
+            width: 100%;
+            padding: 20px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 2px solid rgb(255, 77, 77); /* Linha separando o cabeçalho */
+        }
+
+        .logo-placeholder img {
+            max-height: 50px; /* Ajusta o tamanho da logo */
+            display: block;
         }
 
         .form-container {
-            background-color: rgb(49, 49, 49); /* Fundo cinza escuro */
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-            max-width: 400px;
+            background-color: rgb(49, 49, 49); /* Cinza escuro */
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
             width: 100%;
+            max-width: 450px;
+            margin-top: 120px;
         }
 
         .form-container h1 {
-            margin-bottom: 20px;
-            font-size: 24px;
+            margin-bottom: 25px;
+            font-size: 32px;
             text-align: center;
-            color: #ff4d4d; /* Título em vermelho */
+            color: white;
+            letter-spacing: 1px;
+            font-weight: 600;
         }
 
         .form-container input {
             width: 100%;
             padding: 12px;
-            margin-bottom: 15px;
-            border-radius: 10px;
-            background-color: rgb(64, 64, 64); /* Cinza para os inputs */
-            border: none;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: rgb(64, 64, 64); /* Cinza mais claro */
             color: white;
+            font-size: 16px;
+            transition: all 0.3s ease;
         }
 
         .form-container input::placeholder {
-            color: white; /* Cor do placeholder */
+            color: white;
+            opacity: 0.6;
+        }
+
+        .form-container input:focus {
+            border-color: rgb(255, 77, 77); /* Vermelho brilhante ao focar */
+            box-shadow: 0 0 5px rgb(255, 77, 77); /* Brilho suave */
+            outline: none;
         }
 
         .form-container button {
             width: 100%;
             padding: 12px;
-            background-color: #ff4d4d; /* Fundo vermelho para o botão */
+            background-color: #ff4d4d; /* Vermelho */
             color: white;
             border: none;
-            border-radius: 10px;
+            border-radius: 8px;
             font-size: 16px;
             cursor: pointer;
         }
 
         .form-container button:hover {
-            background-color: #e60000; /* Fundo vermelho mais escuro no hover */
+            background-color: #cc4040; /* Vermelho mais escuro */
         }
 
         .form-container p {
             text-align: center;
             color: white;
+            margin-top: 15px;
         }
 
-        .form-container a {
-            color: #ff4d4d; /* Cor vermelha para o link */
+        .form-container p a {
+            color: #ff4d4d; /* Vermelho */
+            font-weight: bold;
         }
 
-        .form-container a:hover {
-            text-decoration: underline;
+        .form-container p a:hover {
+            color: #cc4040; /* Vermelho mais escuro */
         }
 
         .error-message {
@@ -80,74 +112,156 @@
             font-size: 14px;
             margin-bottom: 10px;
         }
+
+        .alert {
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            text-align: center;
+            position: fixed;
+            top: 80px; /* Abaixo do cabeçalho */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            width: 80%;
+            max-width: 400px;
+        }
+
+        .alert-error {
+            background-color: #ffebee; /* Fundo vermelho claro */
+            color: #c62828; /* Texto vermelho escuro */
+            border: 1px solid #c62828; /* Borda vermelha */
+        }
+
+        .alert-success {
+            background-color: #d4edda; /* Fundo verde claro */
+            color: #155724; /* Texto verde escuro */
+            border: 1px solid #155724; /* Borda verde */
+        }
+
+        .alert-info {
+            background-color: #e3f2fd; /* Fundo azul claro */
+            color: #0d47a1; /* Texto azul escuro */
+            border: 1px solid #0d47a1; /* Borda azul */
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            text-align: center;
+            position: fixed;
+            top: 80px; /* Abaixo do cabeçalho */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            width: 80%;
+            max-width: 400px;
+        }
+
     </style>
 </head>
-<body>
-    <div class="form-container">
-        <h1>Registrar</h1>
-        <form method="POST">
-            {% csrf_token %}
+<body class="text-white">
+    <!-- Cabeçalho -->
+    <header class="header">
+        <div class="logo-placeholder">
+            <!-- Espaço para sua logo -->
+            <img src="/path/to/your/logo.png" alt="Logo">
+        </div>
+    </header>
 
-            <!-- Exibir erros não relacionados a campos específicos -->
-            {% if form.non_field_errors %}
-                <div class="error-message">
-                    {% for error in form.non_field_errors %}
-                        {{ error }}
-                    {% endfor %}
-                </div>
-            {% endif %}
-
-            <!-- Campo Nickname -->
-            <div>
-                <input type="text" name="nickname" placeholder="Nickname" value="{{ form.nickname.value|default:'' }}">
-                {% if form.nickname.errors %}
-                    <div class="error-message">
-                        {% for error in form.nickname.errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            </div>
-
-            <!-- Campo Email -->
-            <div>
-                <input type="email" name="email" placeholder="Email" value="{{ form.email.value|default:'' }}">
-                {% if form.email.errors %}
-                    <div class="error-message">
-                        {% for error in form.email.errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            </div>
-
-            <!-- Campo Senha 1 -->
-            <div>
-                <input type="password" name="password1" placeholder="Senha">
-                {% if form.password1.errors %}
-                    <div class="error-message">
-                        {% for error in form.password1.errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            </div>
-
-            <!-- Campo Senha 2 -->
-            <div>
-                <input type="password" name="password2" placeholder="Confirmar Senha">
-                {% if form.password2.errors %}
-                    <div class="error-message">
-                        {% for error in form.password2.errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            </div>
-
-            <button type="submit">Registrar</button>
-        </form>
-        <p>Já possui uma conta? <a href="/accounts/login/">Logar</a></p>
+    <!-- Exibir mensagens do Django -->
+    {% if messages %}
+    <div id="messages">
+        {% for message in messages %}
+        <div class="alert alert-{% if message.tags == 'error' %}error{% else %}success{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
     </div>
+    {% endif %}
+
+    <!-- Conteúdo Principal -->
+    <div class="container mx-auto px-4 pt-24 pb-20">
+        <main class="w-full max-w-sm mx-auto">
+            <div class="form-container">
+                <h1>Registrar</h1>
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <!-- Exibir erros não relacionados a campos específicos -->
+                    {% if form.non_field_errors %}
+                        <div class="error-message">
+                            {% for error in form.non_field_errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <!-- Campo Nickname -->
+                    <div class="input-wrapper">
+                        <label for="nickname" style="font-size: 16px; font-weight: bold; color: white;">Nickname</label>
+                        <input type="text" id="nickname" name="nickname" placeholder="Digite seu nickname" value="{{ form.nickname.value|default:'' }}">
+                        {% if form.nickname.errors %}
+                            <div class="error-message">
+                                {% for error in form.nickname.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Campo Email -->
+                    <div class="input-wrapper">
+                        <label for="email" style="font-size: 16px; font-weight: bold; color: white;">E-mail</label>
+                        <input type="email" id="email" name="email" placeholder="Digite seu e-mail" value="{{ form.email.value|default:'' }}">
+                        {% if form.email.errors %}
+                            <div class="error-message">
+                                {% for error in form.email.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Campo Senha -->
+                    <div class="input-wrapper">
+                        <label for="password1" style="font-size: 16px; font-weight: bold; color: white;">Senha</label>
+                        <input type="password" id="password1" name="password1" placeholder="Digite sua senha">
+                        {% if form.password1.errors %}
+                            <div class="error-message">
+                                {% for error in form.password1.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Campo Confirmar Senha -->
+                    <div class="input-wrapper">
+                        <label for="password2" style="font-size: 16px; font-weight: bold; color: white;">Confirmar Senha</label>
+                        <input type="password" id="password2" name="password2" placeholder="Confirme sua senha">
+                        {% if form.password2.errors %}
+                            <div class="error-message">
+                                {% for error in form.password2.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <button type="submit">Registrar</button>
+                </form>
+
+                <p>Já tem uma conta? <a href="/accounts/login/">Login</a></p>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        setTimeout(function() {
+            var messages = document.getElementById('messages');
+            if (messages) {
+                messages.style.display = 'none';
+            }
+        }, 5000); // 5000 milissegundos = 5 segundos
+    </script>
 </body>
 </html>

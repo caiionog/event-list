@@ -8,94 +8,207 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            background-color: #121212; /* Fundo escuro */
+            font-family: 'Arial', sans-serif;
+            margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            margin: 0;
-            background-color: black; /* Fundo escuro */
         }
 
-        .form-container {
-            background-color: rgb(49, 49, 49); /* Fundo cinza escuro */
-            padding: 40px 35px; /* Mais padding para deixar a área mais espaçosa */
-            border-radius: 15px; /* Bordas mais arredondadas */
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4); /* Sombra mais suave e mais forte */
-            max-width: 420px;
+        /* Cabeçalho */
+        .header {
+            background-color: rgb(40, 40, 40);
             width: 100%;
+            padding: 20px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 2px solid rgb(255, 77, 77); /* Linha separando o cabeçalho */
+        }
+
+        /* Logo centralizada no cabeçalho */
+        .logo-placeholder img {
+            max-height: 50px; /* Ajusta o tamanho da logo */
+            display: block;
+        }
+
+        /* Formulário */
+        .form-container {
+            background-color: rgb(49, 49, 49); /* Cinza escuro */
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 450px;
+            margin-top: 120px;
         }
 
         .form-container h1 {
-            margin-bottom: 30px; /* Aumentei o espaçamento inferior */
-            font-size: 30px;
+            margin-bottom: 25px;
+            font-size: 32px;
             text-align: center;
-            color: #ff4d4d; /* Título em vermelho */
-            font-weight: 700; /* Título mais impactante */
+            color: white;
+            letter-spacing: 1px;
+            font-weight: 600;
         }
 
         .form-container input {
             width: 100%;
-            padding: 14px;
-            margin-bottom: 20px; /* Maior espaçamento entre os campos */
-            border-radius: 10px;
-            background-color: rgb(64, 64, 64); /* Cinza para os inputs */
-            border: none;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: rgb(64, 64, 64); /* Cinza mais claro */
             color: white;
-            font-size: 16px; /* Tamanho de fonte maior */
+            font-size: 16px;
         }
 
         .form-container input::placeholder {
-            color: white; /* Cor do placeholder */
+            color: white;
+            opacity: 0.6;
         }
 
         .form-container input:focus {
+            border-color: rgb(255, 77, 77); /* Vermelho brilhante ao focar */
+            box-shadow: 0 0 5px rgb(255, 77, 77); /* Brilho suave */
             outline: none;
-            border: 2px solid #ff4d4d; /* Adiciona borda vermelha ao focar no campo */
         }
 
         .form-container button {
             width: 100%;
-            padding: 14px;
-            background-color: #ff4d4d; /* Fundo vermelho para o botão */
+            padding: 12px;
+            background-color: #ff4d4d; /* Vermelho */
             color: white;
             border: none;
-            border-radius: 10px;
-            font-size: 18px; /* Maior tamanho de fonte */
+            border-radius: 8px;
+            font-size: 16px;
             cursor: pointer;
-            font-weight: 600; /* Texto mais destacado */
-            margin-top: 25px; /* Aumentei o espaçamento superior */
         }
 
         .form-container button:hover {
-            background-color: #e60000; /* Fundo vermelho mais escuro no hover */
+            background-color: #cc4040; /* Vermelho mais escuro */
         }
 
         .form-container p {
             text-align: center;
             color: white;
-            margin-top: 30px; /* Mais espaçamento acima */
+            margin-top: 15px;
         }
 
-        .form-container a {
-            color: #ff4d4d; /* Cor vermelha para o link */
-            font-weight: 500; /* Tornando o link mais destacado */
+        .form-container p a {
+            color: #ff4d4d; /* Vermelho */
+            font-weight: bold;
         }
 
-        .form-container a:hover {
-            text-decoration: underline;
+        .form-container p a:hover {
+            color: #cc4040; /* Vermelho mais escuro */
+        }
+
+        /* Animação ao entrar na tela */
+        .form-container {
+            animation: fadeIn 1s ease-in-out;
+        }
+        .error-message {
+            color: #ff4d4d; /* Cor vermelha para mensagens de erro */
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .alert {
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            text-align: center;
+            position: fixed;
+            top: 80px; /* Abaixo do cabeçalho */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            width: 80%;
+            max-width: 400px;
+        }
+
+        .alert-error {
+            background-color: #ffebee; /* Fundo vermelho claro */
+            color: #c62828; /* Texto vermelho escuro */
+            border: 1px solid #c62828; /* Borda vermelha */
+        }
+
+        .alert-success {
+            background-color: #d4edda; /* Fundo verde claro */
+            color: #155724; /* Texto verde escuro */
+            border: 1px solid #155724; /* Borda verde */
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
-<body>
-    <div class="form-container">
-        <h1>Login</h1>
-        <form method="POST">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Entrar</button>
-        </form>
-        <p>Não tem uma conta? <a href="/accounts/register/">Registrar</a></p>
+<body class="text-white">
+    <!-- Cabeçalho -->
+    <header class="header">
+        <div class="logo-placeholder">
+            <!-- Espaço para sua logo, substitua pelo caminho correto -->
+            <img src="/path/to/your/logo.png" alt="Logo">
+        </div>
+    </header>
+
+    <!-- Exibir mensagens do Django -->
+    {% if messages %}
+    <div id="messages">
+        {% for message in messages %}
+        <div class="alert alert-{% if message.tags == 'error' %}error{% else %}success{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
     </div>
+    {% endif %}
+
+    <!-- Conteúdo Principal -->
+    <div class="container mx-auto px-4 pt-24 pb-20">
+        <main class="w-full max-w-sm mx-auto">
+            <div class="form-container">
+                <h1>Login</h1>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="input-wrapper">
+                        <label for="nickname" style="font-size: 16px; font-weight: bold; color: white;">Nickname</label>
+                        <input type="text" id="nickname" name="nickname" placeholder="Digite seu nickname">
+                    </div>
+
+                    <div class="input-wrapper">
+                        <label for="password" style="font-size: 16px; font-weight: bold; color: white;">Senha</label>
+                        <input type="password" id="password" name="password" placeholder="Digite sua senha">
+                    </div>
+
+                    <button type="submit">Entrar</button>
+                </form>
+
+                <p>Não tem uma conta? <a href="/accounts/register/">Registrar</a></p>
+            </div>
+        </main>
+    </div>
+    <script>
+        setTimeout(function() {
+            var messages = document.getElementById('messages');
+            if (messages) {
+                messages.style.display = 'none';
+            }
+        }, 5000); // 5000 milissegundos = 5 segundos
+    </script>
 </body>
 </html>

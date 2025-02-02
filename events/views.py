@@ -30,22 +30,6 @@ def create_event(request):
         form = EventForm()
     
     return render(request, 'events/create_event.html', {'form': form})
-def search_events(request):
-    query = request.GET.get('q')
-    if query:
-        events = Event.objects.filter(
-            Q(name__icontains=query) | Q(description__icontains=query)
-        )
-    else:
-        events = Event.objects.all()
-    
-    # Recupere as mensagens do chat
-    messages = Message.objects.all()  # Ou filtre conforme necessário
-    
-    return render(request, 'feed/index.html', {
-        'events': events,
-        'messages': messages,  # Passa as mensagens para o template
-    })
 
 def event_detail(request, event_id):
     event = get_object_or_404(Event, id=event_id)  # Recupera o evento pelo ID ou retorna 404

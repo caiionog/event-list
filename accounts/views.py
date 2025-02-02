@@ -10,6 +10,11 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 
 def register(request):
+    # Verifica se o usuário já está autenticado
+    if request.user.is_authenticated:
+        messages.info(request, "Você já está logado. Redirecionando para a página inicial.")
+        return redirect('feed:index')  # Redireciona para a página inicial
+
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         form.request = request
@@ -43,6 +48,11 @@ def register(request):
     return render(request, 'accounts/register.html', {'form': form})
 
 def user_login(request):
+    # Verifica se o usuário já está autenticado
+    if request.user.is_authenticated:
+        messages.info(request, "Você já está logado")
+        return redirect('feed:index')  # Redireciona para a página inicial
+
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -54,6 +64,7 @@ def user_login(request):
             if user:
                 if user.is_admin:
                     login(request, user)
+                    messages.success(request, 'Você logou com sucesso!')
                     return redirect('feed:index')
                 if user.is_verified:  # Verifique se o usuário está verificado
                     login(request, user)
