@@ -25,3 +25,11 @@ class Save(models.Model):
 
     def __str__(self):
         return f'{self.user.nickname} salvou {self.event.name}'
+    
+class Share(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='shares')
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='shares')
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.user.nickname} compartilhou {self.event.name}'

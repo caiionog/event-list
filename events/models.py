@@ -25,6 +25,10 @@ class Event(models.Model):
     def saves_count(self):
         return self.saves.count()
     
+    @property
+    def shares_count(self):
+        return self.shares.count()
+    
     @classmethod
     def get_ranked_events(cls):
         # Retorna todos os eventos ordenados pelo número de curtidas (do maior para o menor)
