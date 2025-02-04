@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ event.name }} - Detalhes</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCr0GbQwgjDZmGDxyl_SR1r9hLPeq9-moM"></script>
+    <style>
+        body {
+            background-color: #000;
+            color: #e0e0e0;
+        }
+        .container {
+            max-width: 800px;
+        }
+        a {
+            color: #e0e0e0;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        a:hover {
+            color: #fff;
+            background-color: #f44336;
+        }
+        .text-gray-700 {
+            color: #b0b0b0;
+        }
+        .bg-gray-200 {
+            background-color: #333;
+        }
+        .text-gray-500 {
+            color: #888;
+        }
+    </style>
+</head>
+
+<body>
+<h1>Assinatura Premium</h1>
+<p>Clique no botão abaixo para se tornar um usuário premium por R$10.00.</p>
+<form action="{% url 'premium_payment' %}" method="POST">
+    {% csrf_token %}
+    <script
+        src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+        data-key="{{ stripe_public_key }}"
+        data-amount="2900"
+        data-name="Assinatura Premium"
+        data-description="Assinatura Premium (R$29.00)"
+        data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+        data-locale="auto"
+        data-currency="brl">
+    </script>
+</form>
+</body>
+</html>

@@ -9,6 +9,7 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('events/', include('events.urls')),
     path('interactions/', include('interactions.urls')),
+    path('services/', include('services.urls')),
 ]
 
 # Adicione isso apenas durante o desenvolvimento

@@ -25,6 +25,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = str(os.getenv('SECRET_KEY'))
+STRIPE_PUBLIC_KEY = str(os.getenv('STRIPE_PUBLIC_KEY'))
+STRIPE_SECRET_KEY = str(os.getenv('STRIPE_SECRET_KEY'))
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 

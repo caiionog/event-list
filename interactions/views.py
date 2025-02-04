@@ -30,7 +30,7 @@ def save_event(request, event_id):
 @login_required
 def share_event(request, event_id):
     event = get_object_or_404(Event, id=event_id)
-    messages.info(request, 'Você compartilhou esse evento')
+    messages.info(request, 'Você copiou o link desse evento')
     # Verifica se o usuário já salvou o evento
     share, created = Share.objects.get_or_create(user=request.user, event=event)
     return redirect('feed:index')  # Redireciona para a página inicial ou outra URL
