@@ -1,7 +1,8 @@
 from django.contrib import admin
-from .models import Event, SolicitacaoAcesso
+from .models import Event, SolicitacaoAcesso, EventImage
 
 admin.site.register(Event)
+admin.site.register(EventImage)
 
 @admin.register(SolicitacaoAcesso)
 class SolicitacaoAcessoAdmin(admin.ModelAdmin):

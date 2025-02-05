@@ -353,6 +353,28 @@
         header {
             background-color: #1a1a1a;
         }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal.open {
+            display: flex;
+        }
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            width: 300px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
 
     </style>
 </head>
@@ -449,7 +471,7 @@
         <main class="w-3/4 ml-auto">
             <div class="grid grid-cols-2 gap-6" id="eventList">
                 {% for event in events %}
-                    <div class="event-card">
+                    <div class="event-card" data-category="{{ event.category }}" data-city="{{ event.city }}">
                         <a href="{% url 'events:event_detail' event.id %}">
                             {% if event.image %}
                                 <img src="{{ event.image.url }}" alt="{{ event.name }}" class="w-full h-48 object-cover rounded-lg">
@@ -482,11 +504,12 @@
                     <p class="text-light">No events available at the moment.</p>
                 {% endfor %}
             </div>
-        </main>
+        </main>        
 
         <!-- Right Sidebar -->
         <aside class="right-sidebar">
-            <button class="w-12 h-12 rounded-full">
+            <!-- Botão de Filtro -->
+            <button id="filterButton" class="w-12 h-12 rounded-full bg-blue-500 text-white flex items-center justify-center">
                 <i class="fas fa-filter"></i>
             </button>
             <button class="w-12 h-12 rounded-full">
@@ -504,37 +527,55 @@
     <!-- Botão para abrir o chat -->
     <button class="toggle-button closed" onclick="toggleChat()">&#x25B6;</button>
 
+    <!-- Pop-up de Filtros -->
+    <div id="filterModal" class="modal">
+        <div class="modal-content">
+            <h2 class="text-lg font-semibold mb-4">Filtrar Eventos</h2>
+            <form id="filterForm">
+                <!-- Filtro por Tipo (Category) -->
+                <div class="mb-4">
+                    <label for="category" class="block text-sm font-medium text-gray-700">Tipo</label>
+                    <select id="category" name="category" class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
+                        <option value="">Todos</option>
+                        <option value="FESTA">Festa</option>
+                        <option value="BAR">Bar</option>
+                        <option value="RESTAURANT">Restaurante</option>
+                    </select>
+                </div>
+
+                <!-- Filtro por Cidade (City) -->
+                <div class="mb-4">
+                    <label for="city" class="block text-sm font-medium text-gray-700">Cidade</label>
+                    <input type="text" id="city" name="city" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" placeholder="Digite a cidade">
+                </div>
+
+                <!-- Botões de Ação -->
+                <div class="flex justify-end">
+                    <button type="button" id="closeModal" class="mr-2 px-4 py-2 bg-gray-300 text-gray-700 rounded-md">Cancelar</button>
+                    <button type="button" id="applyFilters" class="px-4 py-2 bg-blue-500 text-white rounded-md">Aplicar Filtros</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
 </body>
 <script>
-    function filterEvents() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const eventCards = document.querySelectorAll('.event-card');
-    
-            eventCards.forEach(card => {
-                const eventName = card.querySelector('h3').textContent.toLowerCase();
-                const eventDescription = card.querySelector('p').textContent.toLowerCase();
-                if (eventName.includes(searchTerm) || eventDescription.includes(searchTerm)) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
+    // Abrir o modal
+    document.getElementById('filterButton').addEventListener('click', function() {
+        document.getElementById('filterModal').classList.add('open');
+    });
+
+    // Fechar o modal
+    document.getElementById('closeModal').addEventListener('click', function() {
+        document.getElementById('filterModal').classList.remove('open');
+    });
+
+    // Fechar o modal ao clicar fora dele
+    window.addEventListener('click', function(event) {
+        if (event.target === document.getElementById('filterModal')) {
+            document.getElementById('filterModal').classList.remove('open');
         }
-    
-    function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
+    });
 
     async function shareEvent(eventId) {
     try {
@@ -603,5 +644,65 @@
             });
         });
     });
+
+    // Função para filtrar os eventos por categoria e cidade
+    function filterEvents() {
+        const selectedCategory = document.getElementById('category').value.toUpperCase();
+        const selectedCity = document.getElementById('city').value.toLowerCase();
+        const eventCards = document.querySelectorAll('.event-card');
+
+        eventCards.forEach(card => {
+            const eventCategory = card.getAttribute('data-category').toUpperCase();
+            const eventCity = card.getAttribute('data-city').toLowerCase();
+
+            const categoryMatch = selectedCategory === '' || eventCategory === selectedCategory;
+            const cityMatch = selectedCity === '' || eventCity.includes(selectedCity);
+
+            if (categoryMatch && cityMatch) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        // Fechar o modal após aplicar os filtros
+        document.getElementById('filterModal').classList.remove('open');
+    }
+    function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+    // Aplicar filtros ao clicar no botão "Aplicar Filtros"
+    document.getElementById('applyFilters').addEventListener('click', filterEvents);
+
+    // Função para filtrar eventos por pesquisa
+    function filterEventsBySearch() {
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        const eventCards = document.querySelectorAll('.event-card');
+
+        eventCards.forEach(card => {
+            const eventName = card.querySelector('h3').textContent.toLowerCase();
+            const eventDescription = card.querySelector('p').textContent.toLowerCase();
+            if (eventName.includes(searchTerm) || eventDescription.includes(searchTerm)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+
+    // Vincular a função de pesquisa ao campo de busca
+    document.getElementById('searchInput').addEventListener('input', filterEventsBySearch);
 </script>
 </html>

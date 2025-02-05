@@ -46,6 +46,10 @@ class Event(models.Model):
         # Retorna todos os eventos ordenados pelo número de curtidas (do maior para o menor)
         return cls.objects.annotate(total_likes=Count('likes')).order_by('-total_likes')
     
+class EventImage(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to='eventsimages/')
+    
 class SolicitacaoAcesso(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='usuario_solicitacao')
     mensagem = models.TextField(blank=True, null=True, verbose_name="Mensagem")

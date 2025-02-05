@@ -1,34 +1,34 @@
 # views.py
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import EventForm
+from .forms import EventForm, EventImageFormSet
 from django.contrib.auth.decorators import login_required
-from .models import Event, SolicitacaoAcesso
+from .models import Event, SolicitacaoAcesso, EventImage
 from django.contrib import messages
 import requests
 
 @login_required
 def create_event(request):
     if request.method == 'POST':
-        form = EventForm(request.POST, request.FILES)  # Inclua request.FILES para lidar com uploads
-        if form.is_valid():
-            event = form.save(commit=False)  # Cria o objeto Event, mas não salva no banco ainda
+        form = EventForm(request.POST, request.FILES)
+        formset = EventImageFormSet(request.POST, request.FILES)
+        
+        if form.is_valid() and formset.is_valid():
+            event = form.save(commit=False)
+            event.creator = request.user
+            event.save()  # Salva o evento primeiro
 
-            google_api_key = "AIzaSyCr0GbQwgjDZmGDxyl_SR1r9hLPeq9-moM"
-            endereco = event.location
-            url = f"https://maps.googleapis.com/maps/api/geocode/json?address={endereco}&key={google_api_key}"
-            response = requests.get(url).json()
-            if response["status"] == "OK":
-                location = response["results"][0]["geometry"]["location"]
-                event.latitude = location["lat"]
-                event.longitude = location["lng"]
+            # Associa o evento ao formset e salva as imagens
+            for form in formset:
+                if form.cleaned_data.get('image'):  # Verifica se há uma imagem no formulário
+                    image = form.cleaned_data['image']
+                    EventImage.objects.create(event=event, image=image)  # Salva manualmente
 
-            event.creator = request.user  # Atribui o usuário atual como criador do evento
-            event.save()  # Agora salva o evento no banco de dados
-            return redirect('feed:index')  # Redireciona para a página inicial após salvar
+            return redirect('feed:index')
     else:
         form = EventForm()
-    
-    return render(request, 'events/create_event.html', {'form': form})
+        formset = EventImageFormSet()
+
+    return render(request, 'events/create_event.html', {'form': form, 'formset': formset})
 
 def solicitar_acesso(request):
     if request.method == 'POST':
