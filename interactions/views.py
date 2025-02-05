@@ -4,6 +4,8 @@ from django.contrib.auth.decorators import login_required
 from events.models import Event
 from .models import Like, Save, Share
 from django.contrib import messages
+from django.urls import reverse
+from django.http import JsonResponse
 
 @login_required
 def like_event(request, event_id):
@@ -30,7 +32,8 @@ def save_event(request, event_id):
 @login_required
 def share_event(request, event_id):
     event = get_object_or_404(Event, id=event_id)
-    messages.info(request, 'Você copiou o link desse evento')
-    # Verifica se o usuário já salvou o evento
     share, created = Share.objects.get_or_create(user=request.user, event=event)
-    return redirect('feed:index')  # Redireciona para a página inicial ou outra URL
+    return JsonResponse({
+        'event_id': event.id,
+        'shares_count': event.shares_count,
+    })

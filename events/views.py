@@ -2,9 +2,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import EventForm
 from django.contrib.auth.decorators import login_required
-from .models import Event
-from django.db.models import Q
-from chat.models import Message
+from .models import Event, SolicitacaoAcesso
+from django.contrib import messages
 import requests
 
 @login_required
@@ -30,6 +29,18 @@ def create_event(request):
         form = EventForm()
     
     return render(request, 'events/create_event.html', {'form': form})
+
+def solicitar_acesso(request):
+    if request.method == 'POST':
+        # Cria uma nova solicitação de acesso
+        mensagem = request.POST.get('message', '')
+        SolicitacaoAcesso.objects.create(
+            user=request.user,  # Atualize para user
+            mensagem=mensagem
+        )
+        messages.success(request, 'Sua solicitação de acesso foi enviada aos administradores.')
+        return redirect('feed:index')
+    return render(request, 'events/solicitar_acesso.html')
 
 def event_detail(request, event_id):
     event = get_object_or_404(Event, id=event_id)  # Recupera o evento pelo ID ou retorna 404

@@ -17,6 +17,7 @@ class CustomUserManager(BaseUserManager):
     def create_superuser(self, nickname, email, password):
         user = self.create_user(nickname, email, password)
         user.is_admin = True
+        user.is_autorizado_eventos = True
         user.is_staff = True  # Necessário para o painel admin
         user.is_premium = True  # Necessário para o painel admin
         user.is_superuser = True  # Necessário para o painel admin
@@ -27,6 +28,7 @@ class CustomUser(AbstractBaseUser):
     nickname = models.CharField(max_length=50, unique=True)
     email = models.EmailField(unique=True)
     is_verified = models.BooleanField(default=False)
+    is_autorizado_eventos = models.BooleanField(default=False, verbose_name="Autorizado para Eventos")
     is_active = models.BooleanField(default=True)
     is_premium = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)  # Necessário para acesso ao painel admin

@@ -470,7 +470,9 @@
                                 <i class="fas fa-bookmark"></i>
                                 <span>{{ event.saves_count }}</span>
                             </a>
-                            <a href="{% url 'interactions:share_event' event.id %}" class="share-btn">
+                            <a href="{% url 'interactions:share_event' event.id %}" 
+                            class="share-btn" 
+                            data-event-url="{{ request.build_absolute_uri }}{% url 'events:event_detail' event.id %}">
                                 <i class="fas fa-share {% if event.id in shared_event_ids %}text-red-500{% else %}text-gray-500{% endif %}"></i>
                                 <span id="share-count-{{ event.id }}">{{ event.shares_count }}</span>
                             </a>
@@ -580,6 +582,26 @@
             showToast(`❌ ${error.message}`, 'error');
         }
     }
+    document.addEventListener('DOMContentLoaded', function() {
+        const shareButtons = document.querySelectorAll('.share-btn');
 
+        shareButtons.forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+
+                // Obtém o link do evento do atributo data-event-url
+                const eventUrl = button.getAttribute('data-event-url');
+
+                // Copia o link para a área de transferência
+                navigator.clipboard.writeText(eventUrl)
+                    .then(() => {
+                        alert('Link copiado para a área de transferência: ' + eventUrl);
+                    })
+                    .catch(() => {
+                        alert('Erro ao copiar o link. Tente novamente.');
+                    });
+            });
+        });
+    });
 </script>
 </html>
